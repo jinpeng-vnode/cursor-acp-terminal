@@ -30,8 +30,19 @@ class C:
     WHITE = "\033[37m"
     GRAY = "\033[90m"
     
+    # 思考用的颜色：暗黄色，更容易阅读
+    THINKING = "\033[33;2m"
+    
     BG_RED = "\033[41m"
     BG_GREEN = "\033[42m"
+
+
+def clean_input(text: str) -> str:
+    """清理用户输入中的括号粘贴模式转义码"""
+    # 移除括号粘贴模式标记
+    text = text.replace("\033[200~", "").replace("\033[201~", "")
+    text = text.replace("\x1b[200~", "").replace("\x1b[201~", "")
+    return text
 
 # 检测是否支持颜色
 _COLOR_ENABLED = hasattr(sys.stdout, 'isatty') and sys.stdout.isatty()
@@ -167,7 +178,8 @@ def main():
 
     while True:
         try:
-            text = input(c(C.GREEN + C.BOLD, "> "))
+            raw_text = input(c(C.GREEN + C.BOLD, "> "))
+            text = clean_input(raw_text)  # 清理括号粘贴模式转义码
         except (EOFError, KeyboardInterrupt):
             break
         if not text.strip():
@@ -193,12 +205,12 @@ def main():
                 update = m.get("params", {}).get("update", {})
                 session_update = update.get("sessionUpdate", "")
                 
-                # AI 思考过程（灰色、斜体）
+                # AI 思考过程（暗黄色，更易阅读）
                 if session_update == "agent_thought_chunk":
                     t = update.get("content", {}).get("text", "")
                     if t:
                         thinking_buffer += t
-                        print(c(C.GRAY + C.ITALIC, t), end="", flush=True)
+                        print(c(C.THINKING, t), end="", flush=True)
                 
                 # AI 回复内容
                 elif session_update == "agent_message_chunk":

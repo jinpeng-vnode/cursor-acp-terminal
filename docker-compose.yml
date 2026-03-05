@@ -1,0 +1,17 @@
+services:
+  test:
+    image: docs-desiner/cli:latest
+    container_name: cursor-acp-test
+    stdin_open: true
+    tty: true
+    working_dir: /workspace
+    volumes:
+      - ./:/workspace/acp-terminal
+    environment:
+      - CURSOR_API_KEY=${CURSOR_API_KEY:-}
+
+# 使用方法：
+# 1. 复制 .env.example 为 .env 并填入 API key
+# 2. 启动容器：docker-compose up -d
+# 3. 首次初始化：docker exec cursor-acp-test su - coder -c "CURSOR_API_KEY=$CURSOR_API_KEY agent --trust --print hello"
+# 4. 运行终端：docker exec -it cursor-acp-test python3 /workspace/acp-terminal/acp_terminal.py
