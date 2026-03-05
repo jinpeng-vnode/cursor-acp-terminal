@@ -111,13 +111,12 @@ def render_command_output(title: str, exit_code: int, stdout: str, stderr: str) 
 def main():
     cwd = os.getcwd()
     
-    # 查找 agent 路径
-    agent_path = "/home/coder/.local/bin/agent" if os.path.exists("/home/coder/.local/bin/agent") else "agent"
-    cmd = [agent_path, "acp"]
-    
-    # 清理环境变量：CURSOR_API_KEY 对 acp 模式无效
-    env = os.environ.copy()
-    env.pop("CURSOR_API_KEY", None)
+    # Linux: 用 su - coder 运行（清空环境变量，使用 coder 凭据）
+    # Windows: 直接运行 agent
+    if os.name == "nt":
+        cmd = ["agent", "acp"]
+    else:
+        cmd = ["su", "-", "coder", "-c", "agent acp"]
     
     proc = subprocess.Popen(
         cmd,
@@ -125,7 +124,6 @@ def main():
         stdout=subprocess.PIPE,
         stderr=subprocess.DEVNULL,
         cwd=cwd,
-        env=env,
     )
 
     def send(method, params):

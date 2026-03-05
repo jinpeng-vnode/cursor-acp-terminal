@@ -46,6 +46,16 @@ The program communicates with Cursor Agent via ACP protocol:
    - `tool_call` - Tool call start
    - `tool_call_update` - Tool call result (including diff)
 
+### First Time Setup
+
+ACP mode doesn't directly support `CURSOR_API_KEY`. Initialize login state first:
+
+```bash
+CURSOR_API_KEY=your_key agent --trust --print "hello"
+```
+
+After success, credentials are cached and ACP mode can use them.
+
 ### Container Environment
 
 When using in docs-desiner CLI container:
@@ -101,6 +111,16 @@ python3 acp_terminal.py
    - `agent_message_chunk` - AI 回复（青色）
    - `tool_call` - 工具调用开始
    - `tool_call_update` - 工具调用结果（包含 diff）
+
+### 首次使用
+
+ACP 模式不直接支持 `CURSOR_API_KEY`，需要先初始化登录状态：
+
+```bash
+CURSOR_API_KEY=你的key agent --trust --print "hello"
+```
+
+执行成功后，凭据会被缓存，ACP 模式即可使用。
 
 ### 容器环境
 
