@@ -1,8 +1,70 @@
-# Cursor ACP 虚拟终端
+# Cursor ACP Terminal
 
-基于 ACP 协议的命令行终端，无 TUI 刷屏，支持颜色和 diff 显示。
+[English](#english) | [中文](#中文)
 
-## 特性
+---
+
+## English
+
+A virtual terminal based on Cursor's Agent Control Protocol (ACP), solving the TUI screen refresh issues of the native Cursor CLI.
+
+### Features
+
+- **No TUI flickering** - Pure streaming output, works with tmux/screen
+- **Color support** - ANSI colors to distinguish different output types
+- **Diff display** - Git-style file modification preview
+- **Auto permissions** - Automatically handles tool permission requests
+
+### Output Colors
+
+| Color | Meaning |
+|-------|---------|
+| Cyan | AI response |
+| Gray italic | AI thinking process |
+| Green `+` | Added lines |
+| Red `-` | Removed lines |
+| Yellow | Tool calls / file modifications |
+| Magenta | Command execution results |
+
+### Usage
+
+```bash
+python3 acp_terminal.py
+```
+
+Type `exit`, `quit`, or `q` to exit.
+
+### How It Works
+
+The program communicates with Cursor Agent via ACP protocol:
+
+1. Starts `agent acp` process
+2. Sends/receives messages via JSON-RPC
+3. Parses different message types in `session/update`:
+   - `agent_thought_chunk` - AI thinking (gray)
+   - `agent_message_chunk` - AI response (cyan)
+   - `tool_call` - Tool call start
+   - `tool_call_update` - Tool call result (including diff)
+
+### Container Environment
+
+When using in docs-desiner CLI container:
+- Container is configured to run as `coder` user
+- `CURSOR_API_KEY` env var is invalid for ACP mode, script handles it automatically
+- Credentials stored in `~/.cursor/cli-config.json`
+
+### Requirements
+
+- Python 3.6+ (no external dependencies)
+- Cursor CLI (`agent`) installed and logged in
+
+---
+
+## 中文
+
+基于 Cursor Agent Control Protocol (ACP) 的虚拟终端，解决原生 Cursor CLI 的 TUI 刷屏问题。
+
+### 特性
 
 - **无 TUI 刷屏** - 纯流式输出，支持 tmux/screen
 - **颜色支持** - ANSI 颜色区分不同类型的输出
@@ -20,7 +82,7 @@
 | 黄色 | 工具调用/文件修改 |
 | 洋红色 | 命令执行结果 |
 
-## 使用
+### 使用方法
 
 ```bash
 python3 acp_terminal.py
@@ -28,7 +90,7 @@ python3 acp_terminal.py
 
 输入 `exit`、`quit` 或 `q` 退出。
 
-## 工作原理
+### 工作原理
 
 程序通过 ACP 协议与 Cursor Agent 通信：
 
@@ -40,14 +102,20 @@ python3 acp_terminal.py
    - `tool_call` - 工具调用开始
    - `tool_call_update` - 工具调用结果（包含 diff）
 
-## 容器环境
+### 容器环境
 
 在 docs-desiner CLI 容器中使用时：
 - 容器已配置为 `coder` 用户运行
 - `CURSOR_API_KEY` 环境变量对 ACP 模式无效，脚本会自动清理
 - 认证凭据存储在 `~/.cursor/cli-config.json`
 
-## 要求
+### 要求
 
 - Python 3.6+（无外部依赖）
 - Cursor CLI (`agent`) 已安装并登录
+
+---
+
+## License
+
+MIT
