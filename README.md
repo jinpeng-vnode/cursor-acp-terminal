@@ -1,3 +1,9 @@
+# ⚠️ 已废弃 — 功能已整合到 [money-tracker/server/cursor.py](https://github.com/jinpeng-vnode/money-tracker)
+
+> 本仓库不再维护。ACP 虚拟终端功能已整合进 money-tracker 的 Cursor 模块。
+
+---
+
 # Cursor ACP Terminal
 
 [English](#english) | [中文](#中文)
